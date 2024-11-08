@@ -1,0 +1,29 @@
+.paginationBtnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.txnList {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.pageNum {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 5px;
+    margin: 0 .5rem;
+    background-color: slategray;
+    color: bisque;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+    border: 0;
+}
+
+.disableBtn {
+    visibility: hidden;
+}
