@@ -2,19 +2,28 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   /* line-height: 1.5;
   font-weight: 400; */
+  color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: content-box;
-
+  outline: thin;
   /* Global CSS Variables */
   --card-bg: #9B9B9B;
   --btn-box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   --icon-size: 3rem;
+  --body-bg: #3B3B3B;
+  --txnList-height-mobile: 100%;
+  --txnList-height: 340px;
+  --outline: none;
+  /* --outline: auto; */
 }
 
+body {
+  background: var(--body-bg);  
+}
 img {
   max-width: 100%;
   height: auto;
@@ -25,6 +34,14 @@ button:hover{
   cursor: pointer;
 }
 
+h1, h2, h3, h4, h5, div, p, img {
+  padding: 0;
+  margin: 0;
+}
+
+input {
+  padding: .5rem;
+}
 /*  */
 .imageGlobalValue {
   height: 1.5rem;

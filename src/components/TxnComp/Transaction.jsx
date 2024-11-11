@@ -3,9 +3,8 @@ import { IconContext } from "react-icons";
 
 // static imports
 import txnStyles from "./Transaction.module.css";
-import editTxn from "../../assets/edit_txn_icon.png";
-import delTxn from "../../assets/del_txn_icon.svg";
 import Button from "../utils/Button";
+import { categoryIcons } from '../../App';
 
 // close
 import { RxCrossCircled } from "react-icons/rx";
@@ -18,22 +17,24 @@ import { MdOutlineModeEdit } from "react-icons/md";
 
 // default icon
 import { IoMdRestaurant } from "react-icons/io";
-import { IoRestaurantOutline } from "react-icons/io5";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
+const Transaction = ({txn, onDeleteHandler, onEditHandler}) => {
 
-const Transaction = ({
-    categoryIcon = <IoRestaurantOutline />,
-    title="Samosa",
-    date=new Date('12/1/2023'),
-    expense=150,
-}) => {
+    // const { Category, Title, Date, Price, onDeleteHandler, onEditHandler, id } = txn;
+    const { Category, Title, Date, Price, id } = txn;
 
     const formattedDate = useMemo(() => {
-        return date.toDateString()
+        console.log(Date);
+        return Date.toDateString()
         .split(' ').splice(1).join(',')
         .replace(',', ' ').replace(',', ', ');
-    }, [date])
+    }, [Date])
 
+    useEffect(() => {
+      console.log("Transaction");
+      console.log(txn);
+    }, [])
+    
     return (
         <IconContext.Provider value={{ className: "imageGlobalValue" }}>
             <div className={`${txnStyles.container} ${txnStyles.txnText}`}>
@@ -42,18 +43,18 @@ const Transaction = ({
                         style={{ backgroundColor: "#D9D9D9" }}
                         className={`${txnStyles.categoryIcon}`}
                     >
-                        {categoryIcon}
+                        <IconContext.Provider value={{ className: "imageGlobalValue" }}>
+                            {/* <FiEdit2 /> */}
+                            {categoryIcons[`${Category}`]}
+                        </IconContext.Provider>
                     </div>
                     <div>
-                        <div style={{marginBottom: "8px"}}>{title}</div>
+                        <div style={{marginBottom: "8px", color: '#000000'}}>{Title}</div>
                         <div style={{color: '#9B9B9B'}}>{formattedDate}</div>
                     </div>
                 </div>
                 <div className="child">
-                    <div className={`${txnStyles.txnAmount}`}>₹{expense}</div>
-                    <button className={`${txnStyles.txnUpdateIcon} ${txnStyles.red}`}>
-                        <RxCrossCircled />
-                    </button>
+                    <div className={`${txnStyles.txnAmount}`}>₹{Price}</div>
                     <Button
                         btnClass="bg-#FF3E3E"
                         icon={
@@ -61,11 +62,17 @@ const Transaction = ({
                                 <RxCrossCircled />
                             </IconContext.Provider>
                         }
-                    ></Button>
+                        onClick={() => onDeleteHandler(id)}
+                    />
                     <Button
                         btnClass="bg-#F4BB4A"
-                        icon={<FiEdit2 />}
-                    ></Button>
+                        icon={
+                            <IconContext.Provider value={{ className: "imageGlobalValue" }}>
+                                <FiEdit2 />
+                            </IconContext.Provider>
+                        }
+                        onClick={() => onEditHandler(id)}
+                    />
                     {/* <button className={`${txnStyles.txnUpdateIcon} ${txnStyles.yellow}`}>
                         <FiEdit2 />
                     </button> */}

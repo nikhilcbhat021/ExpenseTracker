@@ -1,0 +1,20 @@
+.container {
+    box-shadow: 0px 4px 4px 0px #00000040;
+    background: #FFFFFF;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-top: .5rem;
+}
+
+.title {
+
+    font-family: Ubuntu;
+    font-size: 28px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 32.17px;
+    text-align: left;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+
+}

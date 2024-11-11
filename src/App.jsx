@@ -1,58 +1,93 @@
-import { useState, useEffect } from 'react'
-//import reactLogo from './assets/react.svg'
-//<img src={reactLogo} className="logo react" alt="React logo" />
-//import viteLogo from '/vite.svg'
-import './App.css';
-import Transaction from './components/TxnComp/Transaction';
-import Card from './components/utils/Card';
-import Pagination from './components/utils/Pagination';
+import { useState, useEffect, useCallback } from "react";
+
+import { IoRestaurantOutline } from "react-icons/io5";
+import { MdOutlineCategory } from "react-icons/md";
+
+import { IconContext } from "react-icons";
+import ReactModal from "react-modal";
+import { v1, v3, v4, v5, v6, v7, stringify } from "uuid";
+// import {  } from 'uuid';
+//styles
+import "./App.css";
+
+//components
+import Transaction from "./components/TxnComp/Transaction";
+import Card from "./components/utils/Card";
+import Pagination from "./components/utils/Pagination";
+import ExpenseTracker from "./components/ExpenseTracker/ExpenseTracker";
+import TxnList from "./components/TxnList/TxnList";
+import TrendingTxns from "./components/Visuals/TrendingTxns";
+import PieChart from "./components/Visuals/PieChart";
 
 function App() {
+    const [transactions, setTransactions] = useState([]);
 
-  const [prods, setProds] = useState([]);
-  // const url = 'https://dummyjson.com/products/search?limit=100';
-  const url = 'https://dummyjson.com/products/search?q=phone';
-
-  const txns = [...Array(200)].fill((<Transaction></Transaction>),0,200)
-
-  useEffect(() => {
-    (async () => {
-      const resp = await fetch(url);
-      const data = await resp.json();
-      console.log(data.products);
-
-      setProds(data.products);
+    const __delete__ = useCallback((id) => {
+        console.log(id);
+    
+        setTransactions((txns) => {
+            const index = txns.findIndex((val)=>{
+                console.log(val, id)
+                return val.id === id;
+            })
+            console.log(index);
+            return [...txns.slice(0, index), ...txns.slice(index + 1, txns.length)];
+        });
     });
-    console.log(txns)
-  }, [])
-  
-  return (<>
-    <div style={{display:'flex', }}>
-      <Card></Card>
-      <div style={{height: '180px', width:'355px'}}>
-        <Card></Card>
-      </div>
-    </div>
 
-    <br />
-    <p>Txn</p>
+    const __editTxn__ = useCallback((txn) => {
+        console.log("Inside Edit Transaction callback");
+        // Open the modal here.
+    });
+    
+    // Mocking Data -- START
+    const singleTxn = {
+        Category: 'restaurant',
+        Title: "Samosa",
+        Date: new Date("12/1/2023"),
+        Price: 150,
+    };
 
-    <Pagination transactions={txns}></Pagination>
-  </>)
+    const txns = [...Array(13)].map((_, i) => {return {...singleTxn, id: crypto.randomUUID()}});
+    // const txns = [...Array(13)].fill((<Transaction key={i} txn={{...singleTxn, id:i}} txns={transactions}></Transaction>),0,13)
+    // Mocking Data -- END
+
+    useEffect(() => {
+        setTransactions(txns);
+        ReactModal.setAppElement("#root");
+        // const txns = JSON.parse(localStorage.getItem("allTransactions"), transactionsReviver)
+    }, []);
+
+    useEffect(() => {
+        console.log(transactions);
+    }, [transactions]);
+
+    return (
+        <>
+            <div className="landingPage">
+                <div className="expenseTracker">
+                    <ExpenseTracker onTxnAdded={setTransactions} />
+                </div>
+                <div className="txnList">
+                    <TxnList transactions={transactions} onDeleteHandler={(id) => __delete__(id)} onEditHandler={(txn) => __editTxn__(txn)} />
+                </div>
+                <div className="trending">
+                    <TrendingTxns />
+                </div>
+            </div>
+        </>
+    );
 }
 
-{/* <div className="grid_">
-  {
-    prods.length > 0 && 
-      prods.map(p => {
-        return (
-          <div className="grid_cell">
-            <img src={p.thumbnail} alt={p.title} />
-            <div className='title'>{p.title}</div>
-          </div>
-        )
-      })
-  }
-</div> */}
+const transactionsReviver = (key, value) => {
+    if (key.toLowerCase().includes('hander')) {
+        return 
+    }
+}
 
-export default App
+export const categoryIcons = {
+    'restaurant': <IoRestaurantOutline />,
+    'others': <MdOutlineCategory />,
+};
+
+export default App;

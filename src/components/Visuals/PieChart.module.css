@@ -1,0 +1,8 @@
+.container {
+    outline: auto;
+    height: 100%;
+    width: 100%;
+    align-self: center;
+    text-align: center;
+    align-content: center;
+}
