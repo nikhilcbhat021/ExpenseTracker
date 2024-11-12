@@ -21,6 +21,26 @@
     justify-content: flex-start;
 }
 
+.emptyTxnList {
+    width: 100%;
+    height: var(--txnList-height);
+    color: #222;
+
+    font-family: Ubuntu;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 27.58px;
+    text-decoration-skip-ink: none;
+    text-underline-position: from-font;
+
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+    margin: 2rem 0;
+    text-align: center;
+    align-content: center;
+}
+
 .pageNum {
     
     height: 2.2rem;

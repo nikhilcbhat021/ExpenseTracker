@@ -84,7 +84,7 @@ const Pagination = ({transactions, itemsPerPage=4}) => {
             </div> 
         </>) : (
         // localStorage.setItem("allTransactions", JSON.stringify([]))
-            <div className={pageStyles.txnList}> You have no recent transactions... </div>
+            <div className={pageStyles.emptyTxnList}> You have no recent transactions... </div>
         )}
     </div>
   )
