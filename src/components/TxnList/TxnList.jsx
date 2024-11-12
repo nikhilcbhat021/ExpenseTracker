@@ -10,6 +10,11 @@ const TxnList = memo(({transactions, onDeleteHandler, onEditHandler}) => {
   // txn = {Title:String, Catergory:String, id:String(for crypto), Price:Number, Date: Date};
 
   const ReactElementTxnList = useMemo(() => {
+    if (transactions.length === 0) {
+      console.log("No more txn left");
+      // localStorage.setItem("allTransactions", JSON.stringify([]));
+    }
+
     return transactions.map((txn) => {
       console.log("Contructing Transaction");
       console.log(txn);

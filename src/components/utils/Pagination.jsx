@@ -83,6 +83,7 @@ const Pagination = ({transactions, itemsPerPage=4}) => {
                 >{<LiaLongArrowAltRightSolid/>}</button>
             </div> 
         </>) : (
+        // localStorage.setItem("allTransactions", JSON.stringify([]))
             <div className={pageStyles.txnList}> You have no recent transactions... </div>
         )}
     </div>

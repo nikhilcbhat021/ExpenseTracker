@@ -1,6 +1,7 @@
 
 .container {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     background: #626262;
     padding: 1rem 3rem;
@@ -11,11 +12,14 @@
 
 .pieContainer {
     flex-grow: 1;
+    margin-left: 2rem;
 }
 
 .cardContainer {
-    height: 180px;
-    width: 355px;
+    /* height: 180px; */
+    /* min-width: 355px; */
+    min-height: 180px;
+    width: 100%;
     padding: 2rem 0;
 }
 

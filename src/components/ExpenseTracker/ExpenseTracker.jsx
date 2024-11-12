@@ -8,35 +8,28 @@ import Transaction from "../TxnComp/Transaction";
 import { useState } from "react";
 import { useEffect } from "react";
 import ReactModal from "react-modal";
+import { categoryIcons, expenseFormKeys, balanceFormKeys, storage__walletBalance, storage__totalExpenses, storage_allTransactions } from "../../App";
+import { useSnackbar } from 'notistack';
 
-
-const ExpenseTracker = ({onTxnAdded}) => {
-    const [walletBalance, setWalletBalance] = useState(
-        Number(localStorage.getItem("walletBalance"))
-    );
-    const [totalExpenses, setTotalExpenses] = useState(
-        Number(localStorage.getItem("totalExpenses"))
-    );
+const ExpenseTracker = ({onTxnAdded, walletBalance, setWalletBalance, totalExpenses, setTotalExpenses, }) => {
+    // const [walletBalance, setWalletBalance] = useState(
+    //     Number(localStorage.getItem("walletBalance"))
+    // );
+    // const [totalExpenses, setTotalExpenses] = useState(
+    //     Number(localStorage.getItem("totalExpenses"))
+    // );
 
     const [isExpenseModalVisible, setIsExpenseModalVisible] = useState(false);
     const [isWalletModalVisible, setIsWalletModalVisible] = useState(false);
 
-    useEffect(() => {
-        console.log(walletBalance, totalExpenses);
-        localStorage.setItem("walletBalance", walletBalance);
-        localStorage.setItem("totalExpenses", totalExpenses);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    }, [totalExpenses, walletBalance]);
-
-    const expenseFormKeys = ['Title', 'Price', 'Category', 'Date'];
-    const balanceFormKeys = ['Amount'];
-
-    const transactionReplacer = (key, value) => {
-        if (key.toLowerCase().includes('handler')) {
-            return value.toString();
-        }
-        return value;
-    }
+    // const transactionReplacer = (key, value) => {
+    //     if (key.toLowerCase().includes('handler')) {
+    //         return value.toString();
+    //     }
+    //     return value;
+    // }
 
     const onSubmitHandler = (e, formKeys, localStorageKey) => {
         e.preventDefault();
@@ -46,100 +39,44 @@ const ExpenseTracker = ({onTxnAdded}) => {
             return {...prev, [key]: formData.get(key)}
         }, {})
         
-        if (localStorageKey === "transaction") {    
-            // add handlers to data_obj if its a transaction...
-            // add data_obj to txnList (state & localStrg)
-            // update totalExpenses (state & localStrg)
-
-            // data_obj["onDeleteHandler"] = __delete__;
-            // data_obj["onEditHandler"] = __editTxn__;
+        if (localStorageKey === "transaction") {
             data_obj["Price"] = Number(data_obj["Price"]); //// Just a failsafe...
+            if (data_obj["Price"] <= 0) {
+                enqueueSnackbar('Price has to be greater than 0.', {variant:'error'})
+                return;
+            }
+            if (data_obj["Price"] > walletBalance) {
+                enqueueSnackbar("Can't spend more than walletbalance", {variant: 'error'});
+                return;
+            }
+            console.debug(data_obj["Date"]);
             data_obj["Date"] = new Date(data_obj["Date"]);
             data_obj["id"] = crypto.randomUUID();
-            // onAltTxnAdded((txns) => ([...txns, data_obj]));
 
             console.log(data_obj);
-            const allTxns = localStorage.getItem("allTransactions");
-            localStorage.setItem("allTransactions", [...allTxns, JSON.stringify(data_obj, transactionReplacer)]);
 
             setTotalExpenses((exp) => (exp + Number(data_obj["Price"])));
-            // localStorage.setItem("totalExpenses", totalExpenses + Number(data_obj["Price"]));
-
             setWalletBalance((bal) => (bal - Number(data_obj["Price"])));
-            // localStorage.setItem("walletBalance", walletBalance - Number(data_obj["Price"]));
 
-            // transactions will have the category icon and not the text...
-            // data_obj["Category"] = categoryIcons[data_obj["Category"]];
-            // data_obj["onDeleteHandler"] = __delete__;
-            // data_obj["onEditHandler"] = __editTxn__;
-            onTxnAdded((trxns) => ([...trxns, data_obj]));
+            onTxnAdded((trxns) => ([data_obj, ...trxns]));
 
 
             /**
              * 
              */
         } else if (localStorageKey === "walletBalance") {
-            // update walletBalance (state , localStrg)
             console.log(data_obj)
-            if (data_obj[formKeys[0]] > 0) {
+            if (data_obj['Amount'] > 0) {
                 setWalletBalance((bal) => (bal + Number(data_obj[formKeys[0]])));
                 console.log(walletBalance);
-                localStorage.setItem("walletBalance", walletBalance);
             } else {
-                alert("Invalid income added!");
+                enqueueSnackbar('Price has to be greater than 1.', {variant:'error'});
             }
         }
         setIsExpenseModalVisible(false);
         setIsWalletModalVisible(false);
         return;
-        // (formData.get(formKeys[0]))
     }
-
-    // const _onSubmitHandler = (e, formKeys, localStorageKey) => {
-    //     e.preventDefault();
-    //     const formData = new FormData(e.target);
-
-    //     const data_obj = formKeys.reduce((prev, key, i) => {
-    //         return {...prev, [key]: formData.get(key)}
-    //     }, {})
-
-    //     if (localStorageKey === "transaction") {
-    //         // add handlers to data_obj if its a transaction...
-    //         // add data_obj to txnList (state & localStrg)
-    //         // update totalExpenses (state & localStrg)
-
-    //         data_obj["onDeleteHandler"] = __delete__.toString();
-    //         data_obj["onEditHandler"] = __editTxn__.toString();
-    //         data_obj["Date"] = new Date(data_obj["Date"]);
-    //         data_obj["id"] = crypto.randomUUID();
-
-    //         console.log(data_obj);
-    //         const allTxns = localStorage.getItem("allTransactions");
-    //         localStorage.setItem("allTransactions", [...allTxns, JSON.stringify(data_obj)]);
-
-    //         setTotalExpenses((exp) => (exp + Number(data_obj["Price"])));
-    //         // localStorage.setItem("totalExpenses", totalExpenses + Number(data_obj["Price"]));
-
-    //         setWalletBalance((bal) => (bal - Number(data_obj["Price"])));
-    //         // localStorage.setItem("walletBalance", walletBalance - Number(data_obj["Price"]));
-
-    //         // transactions will have the category icon and not the text...
-    //         // data_obj["Category"] = categoryIcons[data_obj["Category"]];
-    //         data_obj["onDeleteHandler"] = __delete__;
-    //         data_obj["onEditHandler"] = __editTxn__;
-    //         onTxnAdded((trxns) => ([...trxns, 
-    //             (<Transaction
-    //                 txn={{...data_obj, id: data_obj["Date"].toDateString()}}
-    //                 setTransactions={onTxnAdded}
-    //             ></Transaction>)
-    //         ]));
-
-    //         // onAltTxnAdded((txns) => ([...txns, {...data_obj, id: crypto.randomUUID()}]));
-
-    //         /**
-    //          * 
-    //          */
-    // }
 
     return (
         <>
@@ -190,6 +127,7 @@ const ExpenseTracker = ({onTxnAdded}) => {
                     onRequestClose={() => {
                         setIsExpenseModalVisible(false);
                     }}
+                    shouldCloseOnOverlayClick={false}
                     overlayClassName={`${expStyles.modal__overlay}`}
                     className={`${expStyles.modal__content}`}
                 >
@@ -198,6 +136,20 @@ const ExpenseTracker = ({onTxnAdded}) => {
                         <div className={`${expStyles.modal__grid__expense}`}>
                             {
                                 expenseFormKeys.map((key) => {
+                                    if (key === 'Category') {
+                                        return <select name={key} placeholder={key} id={key} required
+                                                style={{padding: '5px'}}
+                                            >
+                                            {
+                                                Object.keys(categoryIcons).map((categoryKey) => {
+                                                    console.log(categoryKey);
+                                                    return (
+                                                        <option key={categoryKey} value={categoryKey}>{categoryKey}</option>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+                                    }
                                     return (
                                         <input
                                             key={key}
@@ -237,6 +189,7 @@ const ExpenseTracker = ({onTxnAdded}) => {
                     onRequestClose={() => {
                         setIsWalletModalVisible(false);
                     }}
+                    shouldCloseOnOverlayClick={false}
                     overlayClassName={`${expStyles.modal__overlay}`}
                     className={`${expStyles.modal__content}`}
                 >
@@ -248,7 +201,7 @@ const ExpenseTracker = ({onTxnAdded}) => {
                                     return (
                                         <input
                                             key={key}
-                                            type={key!=='Date' ? "text" : "date"}
+                                            type='number'
                                             placeholder={key}
                                             id={key}
                                             name={key}
@@ -261,6 +214,7 @@ const ExpenseTracker = ({onTxnAdded}) => {
                                 title="Add Balance"
                                 onClick={(e) => {
                                     console.log("Can do validations here...");
+                                    console.log(e.target.id);
                                     // return;
                                 }}
                                 btnClass="submitBtn"

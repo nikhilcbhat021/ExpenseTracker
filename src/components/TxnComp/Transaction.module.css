@@ -12,6 +12,14 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    justify-content: center;
+    /* margin: 0 5px; */
+    /* align-content: center; */
+}
+
+.first {
+    display: flex;
+    /* gap: 5px; */
 }
 
 .txnUpdateIcon {

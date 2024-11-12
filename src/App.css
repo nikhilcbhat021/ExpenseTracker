@@ -29,26 +29,34 @@
     column-gap: 1rem;
     outline: var(--outline);
     padding: 0 .5rem;
-    /* padding: 1rem; */
+     
+    grid-template-columns: repeat(5, 1fr);
+    /* grid-template-rows: 1fr 1fr; */
+    /* padding: 1rem;
+    */
     grid-template-areas:
-        'a a a a'
-        'b b c c';
+        'a a a a a'
+        'b b b c c';
 }
 
 .expenseTracker {
     outline: var(--outline);
     grid-area: a;
-    /* max-width: 100%; */
+    /* grid-column: span 4; */
+    /* max-width: 100%; 
+    */
 }
 
 .txnList {
     outline: var(--outline);
     grid-area: b;
-    /* max-width: 100%; */
+    /* grid-column: span 2; */
 }
 
 .trending {
     outline: var(--outline);
     grid-area: c;
-    /* max-width: 100%; */
+    /* grid-column: span 2; */
+    /* flex-grow: 1;
+    width: 100%; */
 }

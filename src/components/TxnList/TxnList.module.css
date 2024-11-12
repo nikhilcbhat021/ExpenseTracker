@@ -7,7 +7,6 @@
 }
 
 .title {
-
     font-family: Ubuntu;
     font-size: 28px;
     font-style: italic;
@@ -16,5 +15,4 @@
     text-align: left;
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
-
 }
