@@ -92,8 +92,24 @@ const calculateCategoryStats = (expenseList) => {
     return data;
 };
 
+const transactionObjectJSONparser = (key, value) => {
+    console.log(key, value);
+    if (key === "Date") {
+        return new Date(value);
+    }
+    return value;
+};
+
 function App() {
-    const [transactions, setTransactions] = useState([]);
+    const [transactions, setTransactions] = useState(() => {
+        const _allTxns = localStorage.getItem(storage_allTransactions) || "[]";
+
+        const parsed = JSON.parse(_allTxns).map((txn) => {
+            return JSON.parse(txn, transactionObjectJSONparser);
+        });
+        console.error(parsed);
+        return parsed;
+    });
 
     const [categoryTxnsData, setCategoryTxnsData] = useState({});
     const [timeTxnsData, setTimeTxnsData] = useState({});
@@ -101,12 +117,15 @@ function App() {
     const [txnToBeEdited, setTxnToBeEdited] = useState(null);
     const [_isEditTxnModalOpen, _setEditTxnIsModalOpen] = useState(false);
 
-    const [walletBalance, setWalletBalance] = useState(
-        Number(localStorage.getItem(storage__walletBalance))
-    );
-    const [totalExpenses, setTotalExpenses] = useState(
-        Number(localStorage.getItem(storage__totalExpenses))
-    );
+    const [walletBalance, setWalletBalance] = useState(() => {
+        const prevBal = Number(localStorage.getItem(storage__walletBalance)) || 5000;
+        return prevBal;
+    });
+
+    const [totalExpenses, setTotalExpenses] = useState(() => {
+        const prevExp = Number(localStorage.getItem(storage__totalExpenses)) || 0;
+        return prevExp;
+    });
 
     const [summaryData, setSummaryData] = useState(() => {
         const accumulator = Object.keys(categoryIcons).reduce((prev, currKey) => {
@@ -119,10 +138,6 @@ function App() {
         }
     });
 
-    // const { spends: categorySpends, counts: categoryCounts } =
-    // calculateCategoryStats(transactions, setSummaryData);
-
-    const trendingTxns = {};
 
     useEffect(() => {
         //    console.error(categorySpends, categoryCounts);
@@ -134,6 +149,7 @@ function App() {
     useEffect(() => {
         console.error(summaryData);
     },[summaryData])
+
     const __delete__ = useCallback((id) => {
         console.log(id);
 
@@ -200,23 +216,15 @@ function App() {
         setTxnToBeEdited(txn);
     });
 
-    const transactionObjectJSONparser = (key, value) => {
-        console.log(key, value);
-        if (key === "Date") {
-            return new Date(value);
-        }
-        return value;
-    };
-
     // update storage, whenever the state changes...
     usePurelyOnReRender(() => {
         const jsonified = JSON.stringify(
             transactions.map((txn) => JSON.stringify(txn))
         );
-        console.log(jsonified);
+        console.error(jsonified);
         localStorage.setItem(storage_allTransactions, jsonified);
-        console.log(categoryTxnsData);
-        console.log(timeTxnsData);
+        console.error(categoryTxnsData);
+        console.error(timeTxnsData);
     }, [transactions]);
 
     usePurelyOnReRender(() => {
@@ -234,39 +242,16 @@ function App() {
 
     useEffect(() => {
         ReactModal.setAppElement("#root");
-        const allTxns = JSON.parse(
-            localStorage.getItem(storage_allTransactions)
-        );
-        const balance = JSON.parse(
-            localStorage.getItem(storage__walletBalance)
-        );
-        const expenses = JSON.parse(
-            localStorage.getItem(storage__totalExpenses)
-        );
+        // const _allTxns = localStorage.getItem(storage_allTransactions) || "[]";
 
-        console.log(allTxns);
-        console.log(expenses);
-        console.log(balance);
-        let objTransactions = [];
-        if (allTxns && allTxns.length !== 0) {
-            console.log("Setting the transactions here...");
-            objTransactions = allTxns.map((txn) =>
-                JSON.parse(txn, transactionObjectJSONparser)
-            );
-            setTransactions(objTransactions);
-        } else {
-            console.log("No transactions in localStorage");
-        }
-
-        if (
-            balance === 0 &&
-            expenses === 0 &&
-            !!allTxns &&
-            allTxns.length === 0
-        ) {
-            console.log("setting wallet bl to 5000");
-            setWalletBalance(5000);
-        }
+        // console.log(JSON.parse(_allTxns));
+        // setTransactions((p) => {
+        //     const parsed = JSON.parse(_allTxns).map((txn) => {
+        //         return JSON.parse(txn, transactionObjectJSONparser);
+        //     });
+        //     console.error(parsed);
+        //     return parsed;
+        // });
     }, []);
 
     return (
