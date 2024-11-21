@@ -1,0 +1,41 @@
+.balanceForm > * {
+    background: #FBFBFB;
+    color: #333;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    border-radius: 15px;
+    border: transparent;
+}
+
+.balanceForm > h3 {
+    color: #000;
+
+    font-family: Ubuntu;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 34.47px;
+}
+
+.balanceForm > form {
+    display: flex;
+    gap: 1rem;
+
+    font-family: Open Sans;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 21.79px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+}
+
+.balanceForm > input {
+
+}
+
+@media(max-width:767px) {
+
+    .balanceForm > form {
+        flex-direction: column;
+    }
+    
+}

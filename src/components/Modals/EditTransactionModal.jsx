@@ -14,7 +14,9 @@ const EditTransactionModal = ({
     setTransactions,
     setTotalExpenses,
     walletBalance,
-    setWalletBalance
+    setWalletBalance,
+    setCategoryTxnsData,
+    setTimeTxnsData,
 }) => {
     
     useEffect(() => {
@@ -70,6 +72,53 @@ const EditTransactionModal = ({
         });
         setTotalExpenses((exp) => exp + (Number(data_obj["Price"]) - Number(txn["Price"])));
         setWalletBalance((bal) => bal - (Number(data_obj["Price"]) - Number(txn["Price"])));
+        
+        // setCategoryTxnsData((data) => ({
+        //     ...data, 
+        //     [data_obj["Category"]]: Number(data[data_obj["Category"]] - updatedPrice)
+        // }))
+
+        // setTimeTxnsData((data) => ({
+        //     ...data,
+        //     [data_obj["Date"]]: Number(data[data_obj["Date"]] - updatedPrice)
+        // }))
+
+        setCategoryTxnsData(data => {
+            if (data_obj["Category"] === txn["Categories"]) {
+                return {...data,
+                    [data_obj["Category"]]: Number(data[data_obj["Category"]] + updatedPrice)
+                }
+            } else {
+                return {...data,
+                    [txn["Category"]]: Number(data[data_obj["Category"]] + updatedPrice),
+
+                }
+            }
+            if (Object.keys(data).includes(data_obj["Category"])) {
+                
+            } else {
+                return {...data,
+                    [txn["Category"]]: Number(data[txn["Category"]]) - updatedPrice,
+                    [data_obj["Category"]]: Number(updatedPrice)
+                }
+            }
+        })
+        
+        setTimeTxnsData(data => {
+            const key = data_obj["Date"].toLocaleDateString();
+
+            if (Object.keys(data).includes(key)) {
+                return {...data,
+                    [key]: Number(data[key] + updatedPrice)
+                }
+            } else {
+                return {...data,
+                    [txn["Date"]]: Number(data[txn["Date"]]) - updatedPrice,
+                    [data_obj["Date"]]: Number(updatedPrice)
+                }
+            }
+        })
+        
         _setIsModalOpen(false);
     };
 

@@ -1,8 +1,6 @@
 .container {
-    outline: auto;
-    height: 100%;
-    width: 100%;
-    align-self: center;
+    outline: var(--outline);
+    /* align-self: center;
     text-align: center;
-    align-content: center;
+    align-content: center; */
 }

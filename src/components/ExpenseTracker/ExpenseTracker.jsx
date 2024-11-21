@@ -11,7 +11,7 @@ import ReactModal from "react-modal";
 import { categoryIcons, expenseFormKeys, balanceFormKeys, storage__walletBalance, storage__totalExpenses, storage_allTransactions } from "../../App";
 import { useSnackbar } from 'notistack';
 
-const ExpenseTracker = ({onTxnAdded, walletBalance, setWalletBalance, totalExpenses, setTotalExpenses, }) => {
+const ExpenseTracker = ({pieData, onTxnAdded, walletBalance, setWalletBalance, totalExpenses, setTotalExpenses, setCategoryTxnsData, setTimeTxnsData}) => {
     // const [walletBalance, setWalletBalance] = useState(
     //     Number(localStorage.getItem("walletBalance"))
     // );
@@ -24,12 +24,9 @@ const ExpenseTracker = ({onTxnAdded, walletBalance, setWalletBalance, totalExpen
 
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    // const transactionReplacer = (key, value) => {
-    //     if (key.toLowerCase().includes('handler')) {
-    //         return value.toString();
-    //     }
-    //     return value;
-    // }
+    useEffect(() => {
+        console.error(pieData)
+    }, [])
 
     const onSubmitHandler = (e, formKeys, localStorageKey) => {
         e.preventDefault();
@@ -57,6 +54,49 @@ const ExpenseTracker = ({onTxnAdded, walletBalance, setWalletBalance, totalExpen
 
             setTotalExpenses((exp) => (exp + Number(data_obj["Price"])));
             setWalletBalance((bal) => (bal - Number(data_obj["Price"])));
+
+            // setCategoryTxnsData((data) => ({
+            //     ...data, 
+            //     [data_obj["Category"]]: Number(data[data_obj["Category"]] + Number(data_obj["Price"]))
+            // }))
+
+            // setTimeTxnsData((data) => ({
+            //     ...data,
+            //     [data_obj["Date"]]: Number(data[data_obj["Date"]] + Number(data_obj["Price"]))
+            // }))
+
+            setCategoryTxnsData((data) => {
+                console.log(data);
+                console.log(data_obj["Category"])
+                console.log()
+                console.log(Object.keys(data).includes(data_obj["Category"]))
+
+                if (Object.keys(data).includes(data_obj["Category"])) {
+                    return {...data,
+                        [data_obj["Category"]]: Number(data[data_obj["Category"]] + Number(data_obj["Price"]))
+                    }
+                } else {
+                    return {...data,
+                        [data_obj["Category"]]: Number(data_obj["Price"])
+                    }
+                }
+            })
+            
+            setTimeTxnsData((data) => {
+                const key = data_obj["Date"].toLocaleDateString();
+                if (Object.keys(data).includes(key)) {
+                    console.log(key)
+                    console.log(data[key])
+                    console.log(data)
+                    return {...data,
+                        [key]: Number(Number(data[key]) + Number(data_obj["Price"]))
+                    }
+                } else {
+                    return {...data,
+                        [key]: Number(data_obj["Price"])
+                    }
+                }
+            })
 
             onTxnAdded((trxns) => ([data_obj, ...trxns]));
 
@@ -119,7 +159,20 @@ const ExpenseTracker = ({onTxnAdded, walletBalance, setWalletBalance, totalExpen
                 </div>
 
                 <div className={`${expStyles.pieContainer}`}>
-                    <PieChart></PieChart>
+                    <PieChart
+                        data={[
+                            { name: "Others", value: pieData.Others },
+                            { name: "Restaurant", value: pieData.Restaurant },
+                            { name: "Groceries", value: pieData.Groceries },
+                            { name: "Coffee", value: pieData.Coffee },
+                            { name: "Gym", value: pieData.Gym },
+                            { name: "Pet", value: pieData.Pet },
+                            { name: "Game", value: pieData.Game },
+                            { name: "Emergency", value: pieData.Emergency },
+                        ].filter((item) => item.value)
+                    }
+                    >
+                    </PieChart>
                 </div>
 
                 <ReactModal

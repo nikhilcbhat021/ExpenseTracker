@@ -60,3 +60,13 @@
     /* flex-grow: 1;
     width: 100%; */
 }
+
+@media(max-width:767px) {
+    .landingPage {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            'a'
+            'b'
+            'c';
+    }
+}
