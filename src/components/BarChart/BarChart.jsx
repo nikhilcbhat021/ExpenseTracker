@@ -16,14 +16,13 @@ export default function BarChartComponent({ data }) {
     useEffect(() => {
         console.error(data);
     }, [])
-
     return (
         <div className={styles.expenseChart}>
             <h2>Top Expenses</h2>
 
             <div className={styles.barWrapper}>
                 {data?.length ? (
-                    <ResponsiveContainer width="100%" height={280}>
+                    <ResponsiveContainer width="100%" height={425}>
                         <BarChart data={data} layout="vertical">
                             <XAxis
                                 type="number"
@@ -45,7 +44,8 @@ export default function BarChartComponent({ data }) {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
-                            height: "280px",
+                            height: "425px",
+                            color:'black'
                         }}
                     >
                         No transactions!

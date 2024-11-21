@@ -44,6 +44,8 @@ export default function PieChartComponent({ data }) {
       <div
         style={{
           display: "flex",
+          // flexDirection:'column',
+          height:"100%",
           alignItems: "center",
           justifyContent: "center",
         }}
